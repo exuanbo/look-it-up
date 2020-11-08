@@ -42,7 +42,7 @@ import { lookItUp } from '.'
   strictEqual(result, path.join(os.homedir(), '.zshrc'))
 })()
 
-const dirHasFile = (dir: string, file: string): string | undefined =>
+const dirHasFile = (dir, file) =>
   (fs.existsSync(path.join(dir, file)) && dir) || undefined
 
 ;(async () => {
