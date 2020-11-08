@@ -1,50 +1,52 @@
 import fs from 'fs'
-import os from 'os'
 import path from 'path'
 import { stop, lookUp } from '../src/index'
 
-export const HOME = os.homedir()
+export const cwd = process.cwd()
+export const pkgPath = path.join(cwd, 'package.json')
+export const barPath = path.join(cwd, 'tests/fixtures/foo/bar')
 
 export const dirHasFile = (dir: string, file: string): string | undefined =>
   (fs.existsSync(path.join(dir, file)) && dir) || undefined
 
 describe('index', () => {
-  it('should return .zshrc path', async () => {
-    const result = await lookUp('.zshrc')
-    expect(result).toBe(`${HOME}/.zshrc`)
+  it('should return package.json path', async () => {
+    const result = await lookUp('package.json', barPath)
+    expect(result).toBe(pkgPath)
   })
 
-  it('should return home path if matcher function is provided', async () => {
-    const result = await lookUp(dir => dirHasFile(dir, '.zshrc'))
-    expect(result).toBe(HOME)
+  it('should return cwd if matcher function is provided', async () => {
+    const result = await lookUp(dir => dirHasFile(dir, 'package.json'), barPath)
+    expect(result).toBe(cwd)
   })
 
-  it('should return home path if async matcher function is provided', async () => {
+  it('should return cwd if async matcher function is provided', async () => {
     const result = await lookUp(
-      async dir => await Promise.resolve(dirHasFile(dir, '.zshrc'))
+      async dir => await Promise.resolve(dirHasFile(dir, 'package.json')),
+      barPath
     )
-    expect(result).toBe(HOME)
+    expect(result).toBe(cwd)
   })
 
   it('should return undefined if no file is found', async () => {
-    const result = await lookUp('.nvm')
+    const result = await lookUp('no_such_file')
     expect(result).toBe(undefined)
   })
 
   it('should stop in advance if stop is returned from matcher function', async () => {
     const result = await lookUp(dir => {
-      if (dir === HOME) {
+      if (dir === cwd) {
         return stop
       }
-      return dirHasFile(dir, '.zshrc')
-    })
+      return dirHasFile(dir, 'package.json')
+    }, barPath)
     expect(result).toBe(undefined)
   })
 
   it('should return undefined if cwd is provided', async () => {
     const result = await lookUp(
-      dir => dirHasFile(dir, '.zshrc'),
-      path.join(HOME, '..')
+      dir => dirHasFile(dir, 'package.json'),
+      path.join(cwd, '..')
     )
     expect(result).toBe(undefined)
   })
