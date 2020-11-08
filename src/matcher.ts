@@ -7,14 +7,16 @@ export const locate = (path?: string): false | { matched: string } =>
   path !== undefined && fs.existsSync(path) && { matched: path }
 
 type MatcherResult = string | undefined | typeof stop
-type MatcherFn = (dir: string) => Promise<MatcherResult> | MatcherResult
-export type Matcher = string | MatcherFn
+type MatcherFn<S> = (
+  dir: string
+) => S extends true ? MatcherResult : MatcherResult | Promise<MatcherResult>
+export type Matcher<S> = string | MatcherFn<S>
 
 type MatchResult = { dir?: string; matched?: string }
 type Result<S> = S extends true ? MatchResult : Promise<MatchResult>
 
 export const runMatcher = <S extends boolean>(
-  matcher: Matcher,
+  matcher: Matcher<S>,
   dir: string,
   sync: S
 ): Result<S> => {

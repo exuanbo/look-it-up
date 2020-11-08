@@ -25,7 +25,7 @@ describe('lookItUp', () => {
 
   it('should return cwd if async matcher function is provided', async () => {
     const result = await lookItUp(
-      async dir => await Promise.resolve(dirHasFile(dir, 'package.json')),
+      async dir => dirHasFile(dir, 'package.json'),
       barPath
     )
     expect(result).toBe(cwd)
@@ -87,5 +87,20 @@ describe('lookItUpSync', () => {
       path.join(cwd, '..')
     )
     expect(result).toBe(undefined)
+  })
+
+  it('should throw an error if async matcher is provided', () => {
+    expect.assertions(1)
+    try {
+      lookItUpSync(
+        // @ts-expect-error throw new Error(ERROR_MSG)
+        async (dir: string) => dirHasFile(dir, 'package.json'),
+        path.join(cwd, '..')
+      )
+    } catch (err) {
+      expect(err.message).toBe(
+        'Async matcher can not be used in `lookItUpSync()`'
+      )
+    }
   })
 })
