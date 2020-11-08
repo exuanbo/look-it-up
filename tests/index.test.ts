@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { stop, lookItUp } from '../src/index'
+import { stop, lookItUp, lookItUpSync } from '../src/index'
 
 export const cwd = process.cwd()
 export const pkgPath = path.join(cwd, 'package.json')
@@ -9,7 +9,7 @@ export const barPath = path.join(cwd, 'tests/fixtures/foo/bar')
 export const dirHasFile = (dir: string, file: string): string | undefined =>
   (fs.existsSync(path.join(dir, file)) && dir) || undefined
 
-describe('index', () => {
+describe('lookItUp', () => {
   it('should return package.json path', async () => {
     const result = await lookItUp('package.json', barPath)
     expect(result).toBe(pkgPath)
@@ -48,6 +48,41 @@ describe('index', () => {
 
   it('should return undefined if cwd is provided', async () => {
     const result = await lookItUp(
+      dir => dirHasFile(dir, 'package.json'),
+      path.join(cwd, '..')
+    )
+    expect(result).toBe(undefined)
+  })
+})
+
+describe('lookItUpSync', () => {
+  it('should return package.json path', () => {
+    const result = lookItUpSync('package.json', barPath)
+    expect(result).toBe(pkgPath)
+  })
+
+  it('should return cwd if matcher function is provided', () => {
+    const result = lookItUpSync(dir => dirHasFile(dir, 'package.json'), barPath)
+    expect(result).toBe(cwd)
+  })
+
+  it('should return undefined if no file is found', () => {
+    const result = lookItUpSync('no_such_file')
+    expect(result).toBe(undefined)
+  })
+
+  it('should stop in advance if stop is returned from matcher function', () => {
+    const result = lookItUpSync(dir => {
+      if (dir === cwd) {
+        return stop
+      }
+      return dirHasFile(dir, 'package.json')
+    }, barPath)
+    expect(result).toBe(undefined)
+  })
+
+  it('should return undefined if cwd is provided', () => {
+    const result = lookItUpSync(
       dir => dirHasFile(dir, 'package.json'),
       path.join(cwd, '..')
     )
