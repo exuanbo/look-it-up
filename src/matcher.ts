@@ -18,7 +18,7 @@ export const runMatcher = <S extends boolean>(
   dir: string,
   sync: S
 ): Result<S> => {
-  if (!dir || dir === path.parse(dir).root) {
+  if (dir === path.parse(dir).root) {
     if (sync) {
       return {} as Result<S>
     }
