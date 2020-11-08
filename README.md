@@ -20,42 +20,33 @@ declare type MatcherResult = string | undefined | typeof stop
 declare type MatcherFn = (dir: string) => Promise<MatcherResult> | MatcherResult
 declare type Matcher = string | MatcherFn
 
-declare const lookItUp: (
-  matcher: Matcher,
-  cwd?: string | undefined
-) => Promise<string | undefined>
+declare const lookItUp: (matcher: Matcher, cwd?: string) => Promise<string | undefined>
+declare const lookItUpSync: (matcher: Matcher, cwd?: string) => string | undefined
 
-export { lookItUp, stop }
+export { lookItUp, lookItUpSync, stop }
 ```
 
 ### Example
 
 ```js
-import { strictEqual } from 'assert'
 import fs from 'fs'
-import os from 'os'
 import path from 'path'
-import { lookItUp } from '.'
-
-;(async () => {
-  const result = await lookItUp('.zshrc')
-  strictEqual(result, path.join(os.homedir(), '.zshrc'))
-})()
+import { lookItUp, lookItUpSync } from 'look-it-up'
 
 const dirHasFile = (dir, file) =>
   (fs.existsSync(path.join(dir, file)) && dir) || undefined
 
 ;(async () => {
-  const result = await lookItUp(dir => dirHasFile(dir, '.zshrc'))
-  strictEqual(result, os.homedir())
+  await lookItUp('.zshrc') //= > '~/.zshrc'
+
+  await lookItUp(dir => dirHasFile(dir, '.zshrc')) //= > '~'
+
+  await lookItUp(async dir => dirHasFile(dir, '.zshrc')) //= > '~'
 })()
 
-;(async () => {
-  const result = await lookItUp(async dir =>
-    Promise.resolve(dirHasFile(dir, '.zshrc'))
-  )
-  strictEqual(result, os.homedir())
-})()
+lookItUpSync('.zshrc') //= > '~/.zshrc'
+
+lookItUpSync(dir => dirHasFile(dir, '.zshrc')) //= > '~'
 ```
 
 ## Todo
