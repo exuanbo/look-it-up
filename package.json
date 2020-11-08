@@ -1,7 +1,7 @@
 {
-  "name": "look-up",
+  "name": "look-it-up",
   "version": "0.0.0",
-  "description": "",
+  "description": "Find a file or directory by walking up parent directories recursively. Zero dependency.",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
@@ -19,15 +19,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/exuanbo/look-up.git"
+    "url": "git+https://github.com/exuanbo/look-it-up.git"
   },
-  "keywords": [],
+  "keywords": [
+    "look-up",
+    "find-up",
+    "path",
+    "file",
+    "directory",
+    "search",
+    "match",
+    "recursive"
+  ],
   "author": "exuanbo",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/exuanbo/look-up/issues"
+    "url": "https://github.com/exuanbo/look-it-up/issues"
   },
-  "homepage": "https://github.com/exuanbo/look-up#readme",
+  "homepage": "https://github.com/exuanbo/look-it-up#readme",
   "devDependencies": {
     "@rollup/plugin-typescript": "6.1.0",
     "@types/jest": "26.0.15",
