@@ -1,6 +1,6 @@
 import { Matcher, runMatcher } from './matcher'
 
-export const lookUp = async (
+export const lookItUp = async (
   matcher: Matcher,
   cwd?: string
 ): Promise<string | undefined> => {

@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { stop, lookUp } from '../src/index'
+import { stop, lookItUp } from '../src/index'
 
 export const cwd = process.cwd()
 export const pkgPath = path.join(cwd, 'package.json')
@@ -11,17 +11,20 @@ export const dirHasFile = (dir: string, file: string): string | undefined =>
 
 describe('index', () => {
   it('should return package.json path', async () => {
-    const result = await lookUp('package.json', barPath)
+    const result = await lookItUp('package.json', barPath)
     expect(result).toBe(pkgPath)
   })
 
   it('should return cwd if matcher function is provided', async () => {
-    const result = await lookUp(dir => dirHasFile(dir, 'package.json'), barPath)
+    const result = await lookItUp(
+      dir => dirHasFile(dir, 'package.json'),
+      barPath
+    )
     expect(result).toBe(cwd)
   })
 
   it('should return cwd if async matcher function is provided', async () => {
-    const result = await lookUp(
+    const result = await lookItUp(
       async dir => await Promise.resolve(dirHasFile(dir, 'package.json')),
       barPath
     )
@@ -29,12 +32,12 @@ describe('index', () => {
   })
 
   it('should return undefined if no file is found', async () => {
-    const result = await lookUp('no_such_file')
+    const result = await lookItUp('no_such_file')
     expect(result).toBe(undefined)
   })
 
   it('should stop in advance if stop is returned from matcher function', async () => {
-    const result = await lookUp(dir => {
+    const result = await lookItUp(dir => {
       if (dir === cwd) {
         return stop
       }
@@ -44,7 +47,7 @@ describe('index', () => {
   })
 
   it('should return undefined if cwd is provided', async () => {
-    const result = await lookUp(
+    const result = await lookItUp(
       dir => dirHasFile(dir, 'package.json'),
       path.join(cwd, '..')
     )
