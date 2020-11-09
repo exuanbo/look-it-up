@@ -12,7 +12,10 @@ type MatcherFn<S> = (
 ) => S extends true ? MatcherResult : MatcherResult | Promise<MatcherResult>
 export type Matcher<S> = string | MatcherFn<S>
 
-type MatchResult = { dir?: string; matched?: string }
+interface MatchResult {
+  dir?: string
+  matched?: string
+}
 type Result<S> = S extends true ? MatchResult : Promise<MatchResult>
 
 export const runMatcher = <S extends boolean>(
@@ -22,7 +25,7 @@ export const runMatcher = <S extends boolean>(
 ): Result<S> => {
   if (dir === path.parse(dir).root) {
     if (sync) {
-      return {} as Result<S>
+      return ({} as unknown) as Result<S>
     }
     return Promise.resolve({}) as Result<S>
   }
@@ -30,7 +33,7 @@ export const runMatcher = <S extends boolean>(
   if (typeof matcher === 'string') {
     const pathToMatch = path.join(dir, matcher)
     const match = locate(pathToMatch)
-    if (match) {
+    if (match !== false) {
       return match as Result<S>
     }
     return runMatcher(matcher, path.dirname(dir), sync)
@@ -45,7 +48,7 @@ export const runMatcher = <S extends boolean>(
           return {}
         }
         const match = locate(matchedPath)
-        if (match) {
+        if (match !== false) {
           return match
         }
         return runMatcher(matcher, path.dirname(dir), sync)
@@ -54,10 +57,10 @@ export const runMatcher = <S extends boolean>(
 
   const matchedPath = matcher(dir) as MatcherResult
   if (matchedPath === stop) {
-    return {} as Result<S>
+    return ({} as unknown) as Result<S>
   }
   const match = locate(matchedPath)
-  if (match) {
+  if (match !== false) {
     return match as Result<S>
   }
   return runMatcher(matcher, path.dirname(dir), sync)

@@ -1,7 +1,7 @@
 import path from 'path'
 import { cwd, pkgPath, barPath, dirHasFile } from './index.test'
 import * as macher from '../src/matcher'
-import { stop, locate, runMatcher } from '../src/matcher'
+import { Matcher, stop, locate, runMatcher } from '../src/matcher'
 
 const mockRunMatcher = jest.spyOn(macher, 'runMatcher')
 
@@ -56,7 +56,7 @@ describe('runMatcher', () => {
   })
 
   it('should be called 3 times if stop is returned from matcher function', async () => {
-    const cb = (dir: string) => {
+    const cb: Matcher<false> = (dir: string) => {
       if (dir === cwd) {
         return stop
       }
@@ -74,7 +74,7 @@ describe('runMatcher', () => {
   })
 
   it('should be called 6 times if directory is not found', async () => {
-    const cb = (dir: string) => {
+    const cb: Matcher<false> = (dir: string) => {
       if (dir === path.join(cwd, '..')) {
         return stop
       }
