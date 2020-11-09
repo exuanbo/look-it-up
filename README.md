@@ -17,11 +17,11 @@ npm install look-it-up
 ```ts
 declare const stop: unique symbol
 declare type MatcherResult = string | undefined | typeof stop
-declare type MatcherFn = (dir: string) => Promise<MatcherResult> | MatcherResult
-declare type Matcher = string | MatcherFn
+declare type MatcherFn<S> = (dir: string) => S extends true ? MatcherResult : MatcherResult | Promise<MatcherResult>
+declare type Matcher<S> = string | MatcherFn<S>
 
-declare const lookItUp: (matcher: Matcher, cwd?: string) => Promise<string | undefined>
-declare const lookItUpSync: (matcher: Matcher, cwd?: string) => string | undefined
+declare const lookItUp: (matcher: Matcher<false>, cwd?: string) => Promise<string | undefined>
+declare const lookItUpSync: (matcher: Matcher<true>, cwd?: string) => string | undefined
 
 export { lookItUp, lookItUpSync, stop }
 ```
