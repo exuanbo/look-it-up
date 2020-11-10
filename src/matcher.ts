@@ -3,9 +3,6 @@ import path from 'path'
 
 export const stop = Symbol('lookUp.stop')
 
-export const locate = (path?: string): false | { matched: string } =>
-  path !== undefined && fs.existsSync(path) && { matched: path }
-
 type MatcherResult = string | undefined | typeof stop
 type MatcherFn<S> = (
   dir: string
@@ -17,6 +14,11 @@ interface MatchResult {
   matched?: string
 }
 type Result<S> = S extends true ? MatchResult : Promise<MatchResult>
+
+export const locate = (
+  path?: string
+): false | Pick<Required<MatchResult>, 'matched'> =>
+  path !== undefined && fs.existsSync(path) && { matched: path }
 
 export const runMatcher = <S extends boolean>(
   matcher: Matcher<S>,
