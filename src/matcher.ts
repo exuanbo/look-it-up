@@ -31,8 +31,8 @@ export const runMatcher = <S extends boolean>(
   }
 
   if (typeof matcher === 'string') {
-    const pathToMatch = path.join(dir, matcher)
-    const match = locate(pathToMatch)
+    const matcherRes = path.join(dir, matcher)
+    const match = locate(matcherRes)
     if (match !== false) {
       return match as Result<S>
     }
@@ -40,14 +40,14 @@ export const runMatcher = <S extends boolean>(
   }
 
   if (!sync) {
-    const matchedPath = matcher(dir) as Promise<MatcherResult>
-    return Promise.all([matchedPath])
+    const matcherRes = matcher(dir) as Promise<MatcherResult>
+    return Promise.all([matcherRes])
       .then(res => res[0])
-      .then(matchedPath => {
-        if (matchedPath === stop) {
+      .then(matcherRes => {
+        if (matcherRes === stop) {
           return {}
         }
-        const match = locate(matchedPath)
+        const match = locate(matcherRes)
         if (match !== false) {
           return match
         }
@@ -55,11 +55,11 @@ export const runMatcher = <S extends boolean>(
       }) as Result<S>
   }
 
-  const matchedPath = matcher(dir) as MatcherResult
-  if (matchedPath === stop) {
+  const matcherRes = matcher(dir) as MatcherResult
+  if (matcherRes === stop) {
     return ({} as unknown) as Result<S>
   }
-  const match = locate(matchedPath)
+  const match = locate(matcherRes)
   if (match !== false) {
     return match as Result<S>
   }
