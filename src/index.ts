@@ -1,14 +1,14 @@
 import { Matcher, runMatcher } from './matcher'
 
-const ERROR_MSG = 'Async matcher can not be used in `lookItUpSync()`'
-
 export const lookItUp = async (
   matcher: Matcher<false>,
   cwd = process.cwd()
 ): Promise<string | undefined> => {
-  const result = await runMatcher(matcher, cwd, false)
-  return result.matched
+  const { matched } = await runMatcher(matcher, cwd, false)
+  return matched
 }
+
+const ERROR_MSG = 'Async matcher can not be used in `lookItUpSync()`'
 
 export const lookItUpSync = (
   matcher: Matcher<true>,
@@ -20,8 +20,8 @@ export const lookItUpSync = (
   ) {
     throw new Error(ERROR_MSG)
   }
-  const result = runMatcher(matcher, cwd, true)
-  return result.matched
+  const { matched } = runMatcher(matcher, cwd, true)
+  return matched
 }
 
 export { stop } from './matcher'
