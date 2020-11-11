@@ -37,16 +37,16 @@ const dirHasFile = (dir, file) =>
   (fs.existsSync(path.join(dir, file)) && dir) || undefined
 
 ;(async () => {
-  await lookItUp('.zshrc') //= > '~/.zshrc'
+  await lookItUp('.zshrc') // -> '~/.zshrc'
 
-  await lookItUp(dir => dirHasFile(dir, '.zshrc')) //= > '~'
+  await lookItUp(dir => dirHasFile(dir, '.zshrc')) // -> '~'
 
-  await lookItUp(async dir => dirHasFile(dir, '.zshrc')) //= > '~'
+  await lookItUp(async dir => dirHasFile(dir, '.zshrc')) // -> '~'
 })()
 
-lookItUpSync('.zshrc') //= > '~/.zshrc'
+lookItUpSync('.zshrc') // -> '~/.zshrc'
 
-lookItUpSync(dir => dirHasFile(dir, '.zshrc')) //= > '~'
+lookItUpSync(dir => dirHasFile(dir, '.zshrc')) // -> '~'
 ```
 
 ## Todo
