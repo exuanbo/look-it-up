@@ -1,6 +1,6 @@
 {
   "name": "look-it-up",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Find a file or directory by walking up parent directories recursively. Zero dependency.",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
