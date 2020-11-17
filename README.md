@@ -12,21 +12,7 @@
 npm install look-it-up
 ```
 
-## API
-
-```ts
-declare const stop: unique symbol
-declare type MatcherResult = string | undefined | typeof stop
-declare type MatcherFn<S> = (dir: string) => S extends true ? MatcherResult : MatcherResult | Promise<MatcherResult>
-declare type Matcher<S> = string | MatcherFn<S>
-
-declare const lookItUp: (matcher: Matcher<false>, cwd?: string) => Promise<string | undefined>
-declare const lookItUpSync: (matcher: Matcher<true>, cwd?: string) => string | undefined
-
-export { lookItUp, lookItUpSync, stop }
-```
-
-### Example
+### Usage
 
 ```js
 import fs from 'fs'
@@ -47,6 +33,20 @@ const dirHasFile = (dir, file) =>
 lookItUpSync('.zshrc') // -> '~/.zshrc'
 
 lookItUpSync(dir => dirHasFile(dir, '.zshrc')) // -> '~'
+```
+
+## API
+
+```ts
+declare const stop: unique symbol
+declare type MatcherResult = string | undefined | typeof stop
+declare type MatcherFn<S> = (dir: string) => S extends true ? MatcherResult : MatcherResult | Promise<MatcherResult>
+declare type Matcher<S> = string | MatcherFn<S>
+
+declare const lookItUp: (matcher: Matcher<false>, cwd?: string) => Promise<string | undefined>
+declare const lookItUpSync: (matcher: Matcher<true>, cwd?: string) => string | undefined
+
+export { lookItUp, lookItUpSync, stop }
 ```
 
 ## Todo
