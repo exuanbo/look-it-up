@@ -3,17 +3,17 @@ import path from 'path'
 
 export const stop = Symbol('lookUp.stop')
 
-type MatcherResult = string | undefined | typeof stop
-type MatcherFn<S> = (
+type MatcherFnResult = string | undefined | typeof stop
+type MatcherFn<S extends boolean> = (
   dir: string
-) => S extends true ? MatcherResult : MatcherResult | Promise<MatcherResult>
-export type Matcher<S> = string | MatcherFn<S>
+) => S extends true ? MatcherFnResult : MatcherFnResult | Promise<MatcherFnResult>
+export type Matcher<S extends boolean> = string | MatcherFn<S>
 
 interface MatchResult {
   dir?: string
   matched?: string
 }
-type Result<S> = S extends true ? MatchResult : Promise<MatchResult>
+type Result<S extends boolean> = S extends true ? MatchResult : Promise<MatchResult>
 
 export const locate = (
   path?: string
@@ -42,7 +42,7 @@ export const runMatcher = <S extends boolean>(
   }
 
   if (!sync) {
-    const matcherRes = matcher(dir) as Promise<MatcherResult>
+    const matcherRes = matcher(dir) as Promise<MatcherFnResult>
     return Promise.all([matcherRes])
       .then(res => res[0])
       .then(matcherRes => {
@@ -57,7 +57,7 @@ export const runMatcher = <S extends boolean>(
       }) as Result<S>
   }
 
-  const matcherRes = matcher(dir) as MatcherResult
+  const matcherRes = matcher(dir) as MatcherFnResult
   if (matcherRes === stop) {
     return ({} as unknown) as Result<S>
   }
