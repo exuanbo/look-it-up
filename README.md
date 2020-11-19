@@ -23,28 +23,37 @@ const dirHasFile = (dir, file) =>
   (fs.existsSync(path.join(dir, file)) && dir) || undefined
 
 ;(async () => {
-  await lookItUp('.zshrc') // -> '~/.zshrc'
+  await lookItUp('.zshrc') // => '~/.zshrc'
 
-  await lookItUp(dir => dirHasFile(dir, '.zshrc')) // -> '~'
+  await lookItUp(dir => dirHasFile(dir, '.zshrc')) // => '~'
 
-  await lookItUp(async dir => dirHasFile(dir, '.zshrc')) // -> '~'
+  await lookItUp(async dir => dirHasFile(dir, '.zshrc')) // => '~'
 })()
 
 lookItUpSync('.zshrc') // -> '~/.zshrc'
 
-lookItUpSync(dir => dirHasFile(dir, '.zshrc')) // -> '~'
+lookItUpSync(dir => dirHasFile(dir, '.zshrc')) // => '~'
 ```
 
 ## API
 
 ```ts
 declare const stop: unique symbol
-declare type MatcherResult = string | undefined | typeof stop
-declare type MatcherFn<S> = (dir: string) => S extends true ? MatcherResult : MatcherResult | Promise<MatcherResult>
+
+declare type MatcherFnResult = string | undefined | symbol
+declare type MatcherFn<S> = (dir: string) =>
+  MatcherFnResult | (S extends true ? never : Promise<MatcherFnResult>)
 declare type Matcher<S> = string | MatcherFn<S>
 
-declare const lookItUp: (matcher: Matcher<false>, cwd?: string) => Promise<string | undefined>
-declare const lookItUpSync: (matcher: Matcher<true>, cwd?: string) => string | undefined
+declare const lookItUp: (
+  matcher: Matcher<false>,
+  cwd?: string
+) => Promise<string | undefined>
+
+declare const lookItUpSync: (
+  matcher: Matcher<true>,
+  cwd?: string
+) => string | undefined
 
 export { lookItUp, lookItUpSync, stop }
 ```
