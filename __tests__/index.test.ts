@@ -4,7 +4,7 @@ import { stop, lookItUp, lookItUpSync } from '../src/index'
 
 export const cwd = process.cwd()
 export const pkgPath = path.join(cwd, 'package.json')
-export const barPath = path.join(cwd, 'tests/fixtures/foo/bar')
+export const barPath = path.join(cwd, '__tests__/fixtures/foo/bar')
 
 export const dirHasFile = (dir: string, file: string): string | undefined =>
   (fs.existsSync(path.join(dir, file)) && dir) || undefined

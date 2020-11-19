@@ -9,7 +9,7 @@ describe('locate', () => {
   it('should return Result if path exists', () => {
     const pathToTest = pkgPath
     const result = locate(pathToTest)
-    expect(result).toEqual({ matched: pathToTest })
+    expect(result).toStrictEqual({ matched: pathToTest })
   })
 
   it('should return false if path does not exist', () => {
@@ -27,7 +27,7 @@ describe('locate', () => {
 describe('runMatcher', () => {
   it('should return Result if file exists', async () => {
     const result = await runMatcher('package.json', barPath, false)
-    expect(result).toEqual({ matched: pkgPath })
+    expect(result).toStrictEqual({ matched: pkgPath })
   })
 
   it('should be called 5 times to find package.json', async () => {
@@ -49,7 +49,7 @@ describe('runMatcher', () => {
     ])
     expect(mockCalls[3]).toEqual([
       'package.json',
-      path.join(cwd, 'tests'),
+      path.join(cwd, '__tests__'),
       false
     ])
     expect(mockCalls[4]).toEqual(['package.json', cwd, false])
@@ -70,7 +70,11 @@ describe('runMatcher', () => {
     const mockCalls = mockRunMatcher.mock.calls
     expect(mockCalls[0]).toEqual([cb, barPath, false])
     expect(mockCalls[1]).toEqual([cb, path.join(barPath, '..'), false])
-    expect(mockCalls[2]).toEqual([cb, path.join(cwd, 'tests/fixtures'), false])
+    expect(mockCalls[2]).toEqual([
+      cb,
+      path.join(cwd, '__tests__/fixtures'),
+      false
+    ])
   })
 
   it('should be called 6 times if directory is not found', async () => {
@@ -89,7 +93,7 @@ describe('runMatcher', () => {
     expect(mockCalls[0]).toEqual([cb, barPath, false])
     expect(mockCalls[1]).toEqual([cb, path.join(barPath, '..'), false])
     expect(mockCalls[2]).toEqual([cb, path.join(barPath, '../..'), false])
-    expect(mockCalls[3]).toEqual([cb, path.join(cwd, 'tests'), false])
+    expect(mockCalls[3]).toEqual([cb, path.join(cwd, '__tests__'), false])
     expect(mockCalls[4]).toEqual([cb, cwd, false])
     expect(mockCalls[5]).toEqual([cb, path.join(cwd, '..'), false])
   })
