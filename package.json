@@ -39,7 +39,7 @@
   "homepage": "https://github.com/exuanbo/look-it-up#readme",
   "devDependencies": {
     "@rollup/plugin-typescript": "6.1.0",
-    "@types/jest": "26.0.15",
+    "@types/jest": "26.0.20",
     "jest": "26.6.3",
     "rollup": "2.33.3",
     "rollup-plugin-dts": "1.4.14",
