@@ -25,14 +25,14 @@ describe('lookItUp', () => {
     expect(mockCalls[4]).toEqual(['package.json', CWD])
   })
 
-  const matcherSync: MatcherSync = (dir: string) => {
-    if (dir === CWD) {
-      return stop
-    }
-    return doesDirHaveFile(dir, 'fixture')
-  }
-
   it('should be called 3 times if stop is returned from matcher function', async () => {
+    const matcherSync: MatcherSync = (dir: string) => {
+      if (dir === CWD) {
+        return stop
+      }
+      return doesDirHaveFile(dir, 'fixture')
+    }
+
     await M.lookItUp(matcherSync, BAR_PATH)
 
     expect(mockLookItUp).toHaveBeenCalledTimes(3)
@@ -47,6 +47,13 @@ describe('lookItUp', () => {
   })
 
   it('should be called 6 times if directory is not found', async () => {
+    const matcherSync: MatcherSync = (dir: string) => {
+      if (dir === path.join(CWD, '..')) {
+        return stop
+      }
+      return doesDirHaveFile(dir, 'no_such_file')
+    }
+
     await M.lookItUp(matcherSync, BAR_PATH)
 
     expect(mockLookItUp).toHaveBeenCalledTimes(6)
