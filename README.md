@@ -2,9 +2,10 @@
 
 > Find a file or directory by walking up parent directories recursively. Zero dependency.
 
-[![npm](https://img.shields.io/npm/v/look-it-up?style=flat-square)](https://www.npmjs.com/package/look-it-up)
-[![github workflow](https://img.shields.io/github/workflow/status/exuanbo/look-it-up/Node.js%20CI/main?style=flat-square)](https://github.com/exuanbo/look-it-up/actions?query=workflow%3A%22Node.js+CI%22)
-[![codecov](https://img.shields.io/codecov/c/gh/exuanbo/look-it-up?style=flat-square&token=speJkwSMKd)](https://codecov.io/gh/exuanbo/look-it-up)
+[![npm](https://img.shields.io/npm/v/look-it-up)](https://www.npmjs.com/package/look-it-up)
+[![github workflow](https://img.shields.io/github/workflow/status/exuanbo/look-it-up/Node.js%20CI/main)](https://github.com/exuanbo/look-it-up/actions?query=workflow%3A%22Node.js+CI%22)
+[![Codecov branch](https://img.shields.io/codecov/c/gh/exuanbo/look-it-up/main?token=speJkwSMKd)](https://codecov.io/gh/exuanbo/look-it-up)
+[![libera manifesto](https://img.shields.io/badge/libera-manifesto-lightgrey.svg)](https://liberamanifesto.com)
 
 ## Install
 
@@ -19,48 +20,54 @@ import fs from 'fs'
 import path from 'path'
 import { lookItUp, lookItUpSync } from 'look-it-up'
 
-const dirHasFile = (dir, file) =>
+const doesDirHaveFile = (dir, file) =>
   (fs.existsSync(path.join(dir, file)) && dir) || undefined
 
 ;(async () => {
-  await lookItUp('.zshrc') // => '~/.zshrc'
+  await lookItUp('.zshrc')
+  // => '~/.zshrc'
 
-  await lookItUp(dir => dirHasFile(dir, '.zshrc')) // => '~'
+  await lookItUp(dir => doesDirHaveFile(dir, '.zshrc'))
+  // => '~'
 
-  await lookItUp(async dir => dirHasFile(dir, '.zshrc')) // => '~'
+  await lookItUp(async dir => doesDirHaveFile(dir, '.zshrc'))
+  // => '~'
 })()
 
-lookItUpSync('.zshrc') // -> '~/.zshrc'
+lookItUpSync('.zshrc')
+// -> '~/.zshrc'
 
-lookItUpSync(dir => dirHasFile(dir, '.zshrc')) // => '~'
+lookItUpSync(dir => doesDirHaveFile(dir, '.zshrc'))
+// => '~'
 ```
 
 ## API
 
 ```ts
-declare const stop: unique symbol
-
-declare type MatcherFnResult = string | undefined | symbol
-declare type MatcherFn<S> = (dir: string) =>
-  MatcherFnResult | (S extends true ? never : Promise<MatcherFnResult>)
-declare type Matcher<S> = string | MatcherFn<S>
+declare type MatcherResult = string | undefined | symbol
+declare type Matcher =
+  | string
+  | ((dir: string) => MatcherResult | Promise<MatcherResult>)
+declare type MatcherSync = string | ((dir: string) => MatcherResult)
 
 declare const lookItUp: (
-  matcher: Matcher<false>,
-  cwd?: string
+  matcher: Matcher,
+  dir?: string
 ) => Promise<string | undefined>
 
 declare const lookItUpSync: (
-  matcher: Matcher<true>,
-  cwd?: string
-) => string | undefined
+  matcher: MatcherSync,
+  dir?: string
+) => string | undefined | never
+
+declare const stop: unique symbol
 
 export { lookItUp, lookItUpSync, stop }
 ```
 
 ## Todo
 
-- [ ] Documentation
+- [ ] Document
 
 ## License
 
