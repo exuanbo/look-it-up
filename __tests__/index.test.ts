@@ -1,34 +1,27 @@
-import fs from 'fs'
 import path from 'path'
-import { stop, lookItUp, lookItUpSync } from '../src/index'
-
-export const cwd = process.cwd()
-export const pkgPath = path.join(cwd, 'package.json')
-export const barPath = path.join(cwd, '__tests__/fixtures/foo/bar')
-
-export const dirHasFile = (dir: string, file: string): string | undefined =>
-  (fs.existsSync(path.join(dir, file)) && dir) || undefined
+import { stop, lookItUp, lookItUpSync } from '../src'
+import { CWD, PKG_PATH, BAR_PATH, doesDirHaveFile } from './utils'
 
 describe('lookItUp', () => {
   it('should return package.json path', async () => {
-    const result = await lookItUp('package.json', barPath)
-    expect(result).toBe(pkgPath)
+    const result = await lookItUp('package.json', BAR_PATH)
+    expect(result).toBe(PKG_PATH)
   })
 
-  it('should return cwd if matcher function is provided', async () => {
+  it('should return CWD if matcher function is provided', async () => {
     const result = await lookItUp(
-      dir => dirHasFile(dir, 'package.json'),
-      barPath
+      dir => doesDirHaveFile(dir, 'package.json'),
+      BAR_PATH
     )
-    expect(result).toBe(cwd)
+    expect(result).toBe(CWD)
   })
 
-  it('should return cwd if async matcher function is provided', async () => {
+  it('should return CWD if async matcher function is provided', async () => {
     const result = await lookItUp(
-      async dir => dirHasFile(dir, 'package.json'),
-      barPath
+      async dir => doesDirHaveFile(dir, 'package.json'),
+      BAR_PATH
     )
-    expect(result).toBe(cwd)
+    expect(result).toBe(CWD)
   })
 
   it('should return undefined if no file is found', async () => {
@@ -38,18 +31,18 @@ describe('lookItUp', () => {
 
   it('should stop in advance if stop is returned from matcher function', async () => {
     const result = await lookItUp(dir => {
-      if (dir === cwd) {
+      if (dir === CWD) {
         return stop
       }
-      return dirHasFile(dir, 'package.json')
-    }, barPath)
+      return doesDirHaveFile(dir, 'package.json')
+    }, BAR_PATH)
     expect(result).toBe(undefined)
   })
 
-  it('should return undefined if cwd is provided', async () => {
+  it('should return undefined if dir is provided', async () => {
     const result = await lookItUp(
-      dir => dirHasFile(dir, 'package.json'),
-      path.join(cwd, '..')
+      dir => doesDirHaveFile(dir, 'package.json'),
+      path.join(CWD, '..')
     )
     expect(result).toBe(undefined)
   })
@@ -57,13 +50,16 @@ describe('lookItUp', () => {
 
 describe('lookItUpSync', () => {
   it('should return package.json path', () => {
-    const result = lookItUpSync('package.json', barPath)
-    expect(result).toBe(pkgPath)
+    const result = lookItUpSync('package.json', BAR_PATH)
+    expect(result).toBe(PKG_PATH)
   })
 
-  it('should return cwd if matcher function is provided', () => {
-    const result = lookItUpSync(dir => dirHasFile(dir, 'package.json'), barPath)
-    expect(result).toBe(cwd)
+  it('should return CWD if matcher function is provided', () => {
+    const result = lookItUpSync(
+      dir => doesDirHaveFile(dir, 'package.json'),
+      BAR_PATH
+    )
+    expect(result).toBe(CWD)
   })
 
   it('should return undefined if no file is found', () => {
@@ -73,18 +69,18 @@ describe('lookItUpSync', () => {
 
   it('should stop in advance if stop is returned from matcher function', () => {
     const result = lookItUpSync(dir => {
-      if (dir === cwd) {
+      if (dir === CWD) {
         return stop
       }
-      return dirHasFile(dir, 'package.json')
-    }, barPath)
+      return doesDirHaveFile(dir, 'package.json')
+    }, BAR_PATH)
     expect(result).toBe(undefined)
   })
 
-  it('should return undefined if cwd is provided', () => {
+  it('should return undefined if dir is provided', () => {
     const result = lookItUpSync(
-      dir => dirHasFile(dir, 'package.json'),
-      path.join(cwd, '..')
+      dir => doesDirHaveFile(dir, 'package.json'),
+      path.join(CWD, '..')
     )
     expect(result).toBe(undefined)
   })
@@ -94,12 +90,12 @@ describe('lookItUpSync', () => {
     try {
       lookItUpSync(
         // @ts-expect-error throw new Error(ERROR_MSG)
-        async (dir: string) => dirHasFile(dir, 'package.json'),
-        path.join(cwd, '..')
+        async (dir: string) => doesDirHaveFile(dir, 'package.json'),
+        path.join(CWD, '..')
       )
     } catch (err) {
       expect(err.message).toBe(
-        'Async matcher can not be used in `lookItUpSync()`'
+        'Async matcher can not be used in `lookItUpSync`'
       )
     }
   })
