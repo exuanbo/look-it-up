@@ -20,31 +20,31 @@ import fs from 'fs'
 import path from 'path'
 import { lookItUp, lookItUpSync } from 'look-it-up'
 
-const doesDirHaveFile = (dir, file) =>
-  (fs.existsSync(path.join(dir, file)) && dir) || undefined
+const isFileInDir = (file, dir) =>
+  (fs.existsSync(path.join(dir, file)) && dir) || null
 
 ;(async () => {
   await lookItUp('.zshrc')
   // => '~/.zshrc'
 
-  await lookItUp(dir => doesDirHaveFile(dir, '.zshrc'))
+  await lookItUp(dir => isFileInDir('.zshrc', dir))
   // => '~'
 
-  await lookItUp(async dir => doesDirHaveFile(dir, '.zshrc'))
+  await lookItUp(async dir => isFileInDir('.zshrc', dir))
   // => '~'
 })()
 
 lookItUpSync('.zshrc')
 // -> '~/.zshrc'
 
-lookItUpSync(dir => doesDirHaveFile(dir, '.zshrc'))
+lookItUpSync(dir => isFileInDir('.zshrc', dir))
 // => '~'
 ```
 
 ## API
 
 ```ts
-declare type MatcherResult = string | undefined | symbol
+declare type MatcherResult = string | null | symbol
 declare type Matcher =
   | string
   | ((dir: string) => MatcherResult | Promise<MatcherResult>)
@@ -53,21 +53,17 @@ declare type MatcherSync = string | ((dir: string) => MatcherResult)
 declare const lookItUp: (
   matcher: Matcher,
   dir?: string
-) => Promise<string | undefined>
+) => Promise<string | null>
 
 declare const lookItUpSync: (
   matcher: MatcherSync,
   dir?: string
-) => string | undefined | never
+) => string | null | never
 
 declare const stop: unique symbol
 
 export { lookItUp, lookItUpSync, stop }
 ```
-
-## Todo
-
-- [ ] Document
 
 ## License
 
