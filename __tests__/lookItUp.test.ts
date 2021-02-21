@@ -2,7 +2,7 @@ import path from 'path'
 import { stop } from '../src'
 import * as M from '../src/lookItUp'
 import { MatcherSync } from '../src/types'
-import { CWD, PKG_PATH, BAR_PATH, doesDirHaveFile } from './utils'
+import { CWD, PKG_PATH, BAR_PATH, isFileInDir } from './utils'
 
 const mockLookItUp = jest.spyOn(M, 'lookItUp')
 
@@ -30,7 +30,7 @@ describe('lookItUp', () => {
       if (dir === CWD) {
         return stop
       }
-      return doesDirHaveFile(dir, 'fixture')
+      return isFileInDir('fixture', dir)
     }
 
     await M.lookItUp(matcherSync, BAR_PATH)
@@ -51,7 +51,7 @@ describe('lookItUp', () => {
       if (dir === path.join(CWD, '..')) {
         return stop
       }
-      return doesDirHaveFile(dir, 'no_such_file')
+      return isFileInDir('no_such_file', dir)
     }
 
     await M.lookItUp(matcherSync, BAR_PATH)

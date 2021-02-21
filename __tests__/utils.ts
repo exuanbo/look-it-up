@@ -5,8 +5,5 @@ export const CWD = process.cwd()
 export const PKG_PATH = path.join(CWD, 'package.json')
 export const BAR_PATH = path.join(CWD, '__tests__/fixtures/foo/bar')
 
-export const doesDirHaveFile = (
-  dir: string,
-  file: string
-): string | undefined =>
-  (fs.existsSync(path.join(dir, file)) && dir) || undefined
+export const isFileInDir = (file: string, dir: string): string | null =>
+  (fs.existsSync(path.join(dir, file)) && dir) || null
