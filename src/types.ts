@@ -1,4 +1,4 @@
-export type MatcherResult = string | undefined | symbol
+export type MatcherResult = string | null | symbol
 
 export type Matcher =
   | string

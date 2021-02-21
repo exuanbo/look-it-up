@@ -6,7 +6,7 @@ import { isRoot, isStop } from './utils'
 export const lookItUpSync = (
   matcher: MatcherSync,
   dir: string = process.cwd()
-): string | undefined | never => {
+): string | null | never => {
   if (
     typeof matcher === 'function' &&
     (matcher(dir) as unknown) instanceof Promise
@@ -19,16 +19,16 @@ export const lookItUpSync = (
     return fs.existsSync(targetPath)
       ? targetPath
       : isRoot(dir)
-      ? undefined
+      ? null
       : lookItUpSync(matcher, path.dirname(dir))
   }
 
   const matcherResult = matcher(dir)
   if (isStop(matcherResult)) {
-    return undefined
+    return null
   }
   return (
     matcherResult ??
-    (isRoot(dir) ? undefined : lookItUpSync(matcher, path.dirname(dir)))
+    (isRoot(dir) ? null : lookItUpSync(matcher, path.dirname(dir)))
   )
 }
