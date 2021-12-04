@@ -1,4 +1,4 @@
-import path from 'path'
+import { join } from 'path'
 import { stop, lookItUp, lookItUpSync } from '../src'
 import { CWD, PKG_PATH, BAR_PATH, isFileInDir } from './utils'
 
@@ -36,7 +36,7 @@ describe('lookItUp', () => {
   })
 
   it('should return null if dir is provided', async () => {
-    const result = await lookItUp(dir => hasPkgJson(dir), path.join(CWD, '..'))
+    const result = await lookItUp(dir => hasPkgJson(dir), join(CWD, '..'))
     expect(result).toBe(null)
   })
 })
@@ -68,7 +68,7 @@ describe('lookItUpSync', () => {
   })
 
   it('should return null if dir is provided', () => {
-    const result = lookItUpSync(dir => hasPkgJson(dir), path.join(CWD, '..'))
+    const result = lookItUpSync(dir => hasPkgJson(dir), join(CWD, '..'))
     expect(result).toBe(null)
   })
 
@@ -76,9 +76,9 @@ describe('lookItUpSync', () => {
     expect.assertions(1)
     try {
       lookItUpSync(
-        // @ts-expect-error throw new Error(ERROR_MSG)
+        // @ts-expect-error: async matcher
         async (dir: string) => hasPkgJson(dir),
-        path.join(CWD, '..')
+        join(CWD, '..')
       )
     } catch (err) {
       expect((err as Error).message).toBe('Async matcher can not be used in `lookItUpSync`')

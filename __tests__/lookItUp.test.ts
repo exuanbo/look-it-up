@@ -1,4 +1,4 @@
-import path from 'path'
+import { join } from 'path'
 import { stop } from '../src'
 import * as M from '../src/lookItUp'
 import { MatcherSync } from '../src/types'
@@ -19,9 +19,9 @@ describe('lookItUp', () => {
 
     const mockCalls = mockLookItUp.mock.calls
     expect(mockCalls[0]).toEqual(['package.json', BAR_PATH])
-    expect(mockCalls[1]).toEqual(['package.json', path.join(BAR_PATH, '..')])
-    expect(mockCalls[2]).toEqual(['package.json', path.join(BAR_PATH, '../..')])
-    expect(mockCalls[3]).toEqual(['package.json', path.join(CWD, '__tests__')])
+    expect(mockCalls[1]).toEqual(['package.json', join(BAR_PATH, '..')])
+    expect(mockCalls[2]).toEqual(['package.json', join(BAR_PATH, '../..')])
+    expect(mockCalls[3]).toEqual(['package.json', join(CWD, '__tests__')])
     expect(mockCalls[4]).toEqual(['package.json', CWD])
   })
 
@@ -39,13 +39,13 @@ describe('lookItUp', () => {
 
     const mockCalls = mockLookItUp.mock.calls
     expect(mockCalls[0]).toEqual([matcherSync, BAR_PATH])
-    expect(mockCalls[1]).toEqual([matcherSync, path.join(BAR_PATH, '..')])
-    expect(mockCalls[2]).toEqual([matcherSync, path.join(CWD, '__tests__/fixtures')])
+    expect(mockCalls[1]).toEqual([matcherSync, join(BAR_PATH, '..')])
+    expect(mockCalls[2]).toEqual([matcherSync, join(CWD, '__tests__/fixtures')])
   })
 
   it('should be called 6 times if directory is not found', async () => {
     const matcherSync: MatcherSync = (dir: string) => {
-      if (dir === path.join(CWD, '..')) {
+      if (dir === join(CWD, '..')) {
         return stop
       }
       return isFileInDir('no_such_file', dir)
@@ -57,10 +57,10 @@ describe('lookItUp', () => {
 
     const mockCalls = mockLookItUp.mock.calls
     expect(mockCalls[0]).toEqual([matcherSync, BAR_PATH])
-    expect(mockCalls[1]).toEqual([matcherSync, path.join(BAR_PATH, '..')])
-    expect(mockCalls[2]).toEqual([matcherSync, path.join(BAR_PATH, '../..')])
-    expect(mockCalls[3]).toEqual([matcherSync, path.join(CWD, '__tests__')])
+    expect(mockCalls[1]).toEqual([matcherSync, join(BAR_PATH, '..')])
+    expect(mockCalls[2]).toEqual([matcherSync, join(BAR_PATH, '../..')])
+    expect(mockCalls[3]).toEqual([matcherSync, join(CWD, '__tests__')])
     expect(mockCalls[4]).toEqual([matcherSync, CWD])
-    expect(mockCalls[5]).toEqual([matcherSync, path.join(CWD, '..')])
+    expect(mockCalls[5]).toEqual([matcherSync, join(CWD, '..')])
   })
 })

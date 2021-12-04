@@ -1,5 +1,5 @@
-import fs from 'fs'
-import path from 'path'
+import { existsSync } from 'fs'
+import { dirname, join } from 'path'
 import { MatcherSync } from './types'
 import { isRoot, isStop } from './utils'
 
@@ -12,17 +12,17 @@ export const lookItUpSync = (
   }
 
   if (typeof matcher === 'string') {
-    const targetPath = path.join(dir, matcher)
-    return fs.existsSync(targetPath)
+    const targetPath = join(dir, matcher)
+    return existsSync(targetPath)
       ? targetPath
       : isRoot(dir)
       ? null
-      : lookItUpSync(matcher, path.dirname(dir))
+      : lookItUpSync(matcher, dirname(dir))
   }
 
   const matcherResult = matcher(dir)
   if (isStop(matcherResult)) {
     return null
   }
-  return matcherResult ?? (isRoot(dir) ? null : lookItUpSync(matcher, path.dirname(dir)))
+  return matcherResult ?? (isRoot(dir) ? null : lookItUpSync(matcher, dirname(dir)))
 }

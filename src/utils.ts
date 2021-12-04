@@ -1,7 +1,7 @@
-import path from 'path'
+import { dirname } from 'path'
 import { MatcherResult } from './types'
 
-export const isRoot = (dir: string): boolean => dir === path.dirname(dir)
+export const isRoot = (dir: string): boolean => dir === dirname(dir)
 
 export const stop = Symbol('stop')
 
