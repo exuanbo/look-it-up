@@ -21,8 +21,7 @@ export const lookItUpSync = (
   }
 
   const matcherResult = matcher(dir)
-  if (isStop(matcherResult)) {
-    return null
-  }
-  return matcherResult ?? (isRoot(dir) ? null : lookItUpSync(matcher, dirname(dir)))
+  return isStop(matcherResult)
+    ? null
+    : matcherResult ?? (isRoot(dir) ? null : lookItUpSync(matcher, dirname(dir)))
 }
