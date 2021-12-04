@@ -77,11 +77,11 @@ describe('lookItUpSync', () => {
     try {
       lookItUpSync(
         // @ts-expect-error: async matcher
-        async (dir: string) => hasPkgJson(dir),
+        async dir => hasPkgJson(dir),
         join(CWD, '..')
       )
     } catch (err) {
-      expect((err as Error).message).toBe('Async matcher can not be used in `lookItUpSync`')
+      expect((err as Error).message).toBe("Async matcher can not be used in 'lookItUpSync'")
     }
   })
 })
