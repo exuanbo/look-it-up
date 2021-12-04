@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs'
 import { dirname, join } from 'path'
-import { Matcher } from './types'
 import { isRoot, isStop } from './utils'
+import type { Matcher } from './types'
 
 const exists = async (path: string): Promise<boolean> =>
   await fs

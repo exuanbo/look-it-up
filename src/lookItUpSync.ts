@@ -1,7 +1,7 @@
 import { existsSync } from 'fs'
 import { dirname, join } from 'path'
-import { MatcherSync } from './types'
 import { isRoot, isStop } from './utils'
+import type { MatcherSync } from './types'
 
 export const lookItUpSync = (
   matcher: MatcherSync,

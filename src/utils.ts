@@ -1,5 +1,5 @@
 import { dirname } from 'path'
-import { MatcherResult } from './types'
+import type { MatcherResult } from './types'
 
 export const isRoot = (dir: string): boolean => dir === dirname(dir)
 
