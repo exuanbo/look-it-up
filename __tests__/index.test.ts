@@ -26,12 +26,7 @@ describe('lookItUp', () => {
   })
 
   it('should stop in advance if stop is returned from matcher function', async () => {
-    const result = await lookItUp(dir => {
-      if (dir === CWD) {
-        return stop
-      }
-      return hasPkgJson(dir)
-    }, BAR_PATH)
+    const result = await lookItUp(dir => (dir === CWD ? stop : hasPkgJson(dir)), BAR_PATH)
     expect(result).toBe(null)
   })
 
@@ -58,12 +53,7 @@ describe('lookItUpSync', () => {
   })
 
   it('should stop in advance if stop is returned from matcher function', () => {
-    const result = lookItUpSync(dir => {
-      if (dir === CWD) {
-        return stop
-      }
-      return hasPkgJson(dir)
-    }, BAR_PATH)
+    const result = lookItUpSync(dir => (dir === CWD ? stop : hasPkgJson(dir)), BAR_PATH)
     expect(result).toBe(null)
   })
 

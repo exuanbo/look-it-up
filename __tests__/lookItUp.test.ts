@@ -26,12 +26,8 @@ describe('lookItUp', () => {
   })
 
   it('should be called 3 times if stop is returned from matcher function', async () => {
-    const matcherSync: MatcherSync = (dir: string) => {
-      if (dir === CWD) {
-        return stop
-      }
-      return isFileInDir('fixture', dir)
-    }
+    const matcherSync: MatcherSync = (dir: string) =>
+      dir === CWD ? stop : isFileInDir('fixture', dir)
 
     await M.lookItUp(matcherSync, BAR_PATH)
 
@@ -44,12 +40,8 @@ describe('lookItUp', () => {
   })
 
   it('should be called 6 times if directory is not found', async () => {
-    const matcherSync: MatcherSync = (dir: string) => {
-      if (dir === join(CWD, '..')) {
-        return stop
-      }
-      return isFileInDir('no_such_file', dir)
-    }
+    const matcherSync: MatcherSync = (dir: string) =>
+      dir === join(CWD, '..') ? stop : isFileInDir('no_such_file', dir)
 
     await M.lookItUp(matcherSync, BAR_PATH)
 
