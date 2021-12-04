@@ -7,10 +7,7 @@ export const lookItUpSync = (
   matcher: MatcherSync,
   dir: string = process.cwd()
 ): string | null | never => {
-  if (
-    typeof matcher === 'function' &&
-    (matcher(dir) as unknown) instanceof Promise
-  ) {
+  if (typeof matcher === 'function' && (matcher(dir) as unknown) instanceof Promise) {
     throw new Error('Async matcher can not be used in `lookItUpSync`')
   }
 
@@ -27,8 +24,5 @@ export const lookItUpSync = (
   if (isStop(matcherResult)) {
     return null
   }
-  return (
-    matcherResult ??
-    (isRoot(dir) ? null : lookItUpSync(matcher, path.dirname(dir)))
-  )
+  return matcherResult ?? (isRoot(dir) ? null : lookItUpSync(matcher, path.dirname(dir)))
 }

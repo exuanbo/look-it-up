@@ -40,10 +40,7 @@ describe('lookItUp', () => {
     const mockCalls = mockLookItUp.mock.calls
     expect(mockCalls[0]).toEqual([matcherSync, BAR_PATH])
     expect(mockCalls[1]).toEqual([matcherSync, path.join(BAR_PATH, '..')])
-    expect(mockCalls[2]).toEqual([
-      matcherSync,
-      path.join(CWD, '__tests__/fixtures')
-    ])
+    expect(mockCalls[2]).toEqual([matcherSync, path.join(CWD, '__tests__/fixtures')])
   })
 
   it('should be called 6 times if directory is not found', async () => {

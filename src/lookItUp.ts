@@ -20,8 +20,5 @@ export const lookItUp = async (
   if (isStop(matcherResult)) {
     return null
   }
-  return (
-    matcherResult ??
-    (isRoot(dir) ? null : await lookItUp(matcher, path.dirname(dir)))
-  )
+  return matcherResult ?? (isRoot(dir) ? null : await lookItUp(matcher, path.dirname(dir)))
 }

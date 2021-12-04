@@ -2,8 +2,7 @@ import path from 'path'
 import { stop, lookItUp, lookItUpSync } from '../src'
 import { CWD, PKG_PATH, BAR_PATH, isFileInDir } from './utils'
 
-const hasPkgJson = (dir: string): string | null =>
-  isFileInDir('package.json', dir)
+const hasPkgJson = (dir: string): string | null => isFileInDir('package.json', dir)
 
 describe('lookItUp', () => {
   it('should return package.json path', async () => {
@@ -82,9 +81,7 @@ describe('lookItUpSync', () => {
         path.join(CWD, '..')
       )
     } catch (err) {
-      expect(err.message).toBe(
-        'Async matcher can not be used in `lookItUpSync`'
-      )
+      expect((err as Error).message).toBe('Async matcher can not be used in `lookItUpSync`')
     }
   })
 })
