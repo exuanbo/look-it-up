@@ -9,10 +9,7 @@ const exists = async (path: string): Promise<boolean> =>
     .then(() => true)
     .catch(() => false)
 
-export const lookItUp = async (
-  matcher: Matcher,
-  dir: string = process.cwd()
-): Promise<string | null> => {
+export const lookItUp = async (matcher: Matcher, dir = process.cwd()): Promise<string | null> => {
   if (typeof matcher === 'string') {
     const targetPath = join(dir, matcher)
     return (await exists(targetPath))

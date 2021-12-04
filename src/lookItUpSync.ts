@@ -3,10 +3,7 @@ import { dirname, join } from 'path'
 import { isRoot, isStop } from './utils'
 import type { MatcherSync } from './types'
 
-export const lookItUpSync = (
-  matcher: MatcherSync,
-  dir: string = process.cwd()
-): string | null | never => {
+export const lookItUpSync = (matcher: MatcherSync, dir = process.cwd()): string | null | never => {
   if (typeof matcher === 'function' && (matcher(dir) as unknown) instanceof Promise) {
     throw new Error('Async matcher can not be used in `lookItUpSync`')
   }
