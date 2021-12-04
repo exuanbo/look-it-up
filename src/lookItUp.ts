@@ -1,13 +1,6 @@
-import { promises as fs } from 'fs'
 import { dirname, join } from 'path'
-import { isRoot, isStop } from './utils'
+import { exists, isRoot, isStop } from './utils'
 import type { Matcher } from './types'
-
-const exists = async (path: string): Promise<boolean> =>
-  await fs
-    .access(path)
-    .then(() => true)
-    .catch(() => false)
 
 export const lookItUp = async (matcher: Matcher, dir = process.cwd()): Promise<string | null> => {
   if (typeof matcher === 'string') {

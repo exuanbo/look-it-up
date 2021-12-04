@@ -2,7 +2,7 @@ import { join } from 'path'
 import { stop } from '../src'
 import * as M from '../src/lookItUp'
 import { MatcherSync } from '../src/types'
-import { CWD, PKG_PATH, BAR_PATH, isFileInDir } from './utils'
+import { CWD, PKG_PATH, BAR_PATH, containsSync } from './utils'
 
 const mockLookItUp = jest.spyOn(M, 'lookItUp')
 
@@ -27,7 +27,7 @@ describe('lookItUp', () => {
 
   it('should be called 3 times if stop is returned from matcher function', async () => {
     const matcherSync: MatcherSync = (dir: string) =>
-      dir === CWD ? stop : isFileInDir('fixture', dir)
+      dir === CWD ? stop : containsSync('fixture', dir)
 
     await M.lookItUp(matcherSync, BAR_PATH)
 
@@ -41,7 +41,7 @@ describe('lookItUp', () => {
 
   it('should be called 6 times if directory is not found', async () => {
     const matcherSync: MatcherSync = (dir: string) =>
-      dir === join(CWD, '..') ? stop : isFileInDir('no_such_file', dir)
+      dir === join(CWD, '..') ? stop : containsSync('no_such_file', dir)
 
     await M.lookItUp(matcherSync, BAR_PATH)
 
