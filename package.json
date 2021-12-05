@@ -2,6 +2,7 @@
   "name": "look-it-up",
   "version": "2.0.0",
   "description": "Find a file or directory by walking up parent directories recursively. Zero dependency.",
+  "sideEffects": false,
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
